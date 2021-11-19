@@ -1,0 +1,41 @@
+version: '3.4'
+
+services:
+  app:
+    container_name: saveit
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/home/app
+      - /home/app/node_modules
+    ports:
+      - 3333:3333
+    links:
+      - db
+      - db_test
+    depends_on:
+      - db
+      - db_test
+    env_file:
+      - .env
+
+  db:
+    container_name: db_nest
+    image: postgres:alpine
+    environment:
+      - POSTGRES_DB=nest
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432
+
+  db_test:
+    container_name: db_nest_test
+    image: postgres:alpine
+    environment:
+      - POSTGRES_DB=nest
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5423:5432
