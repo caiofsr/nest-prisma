@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   app:
-    container_name: saveit
+    container_name: nest_prisma
     build:
       context: .
       dockerfile: Dockerfile
