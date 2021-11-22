@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 
 import bcrypt from 'bcrypt';
 
-import { UserService } from 'Modules/user/database/user.service';
+import { UserService } from 'Modules/client/user/database/user.service';
 
 @Injectable()
 export class AuthService {
@@ -10,12 +11,19 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.userService.user({ email });
+
     if (user && (await bcrypt.compare(password, user.password))) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...result } = user;
-      return result;
+
+      return user;
     }
 
     return null;
+  }
+
+  async registerUser(data: Prisma.UserCreateInput) {
+    const user = await this.userService.createUser(data);
+
+    return user;
   }
 }
